@@ -46,14 +46,14 @@ footer{border-top:1px solid var(--line);padding:22px 0;color:#686868;font-size:1
 <div class="formfield full"><label for="imageInput">KÉP (OPCIONÁLIS)</label><input id="imageInput" class="field" type="file" accept="image/png,image/jpeg,image/webp"><span class="hint">JPG, PNG, WEBP · max. 5 MB</span><img id="imagePreview" class="preview" hidden alt="Kép előnézete"><label style="display:flex;align-items:center;gap:8px;font-weight:500"><input id="removeImage" type="checkbox" style="width:auto"> Meglévő kép eltávolítása</label></div>
 </div><div class="formactions"><button type="button" class="btn" data-close="placeOverlay">Mégse</button><button class="btn primary" type="submit">Mentés</button></div></form></section></div>
 <div class="toast" id="toast"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabaseClient/supabaseClient-js@2"></script>
 <script>
 // Publikus projektbeállítások: a Supabase Project URL és publishable/anon key kerülhet ide.
 // SOHA ne tegyél ide service_role / secret kulcsot. Az adatbázis jogosultságát az RLS védi.
 const SUPABASE_URL = "https://ehyprlxifqxxcmhtuiqe.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVoeXBybHhpZnF4eGNtaHR1aXFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2MTI3MjcsImV4cCI6MjEwODE4ODcyN30.C_6FiBWunlLUqi8sLhoV8aGuilfoV7tRRYHEsaLhnJo";
 const configured = SUPABASE_URL.startsWith("https://") && !SUPABASE_URL.includes("IDE_IRD") && !SUPABASE_ANON_KEY.includes("IDE_IRD");
-const supabase = configured ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+const supabaseClient = configured ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 const seed = [
 ["Dealer","Cayo Perico Sziget","Cayo 1",""],["Dealer","Cayo Perico Sziget","Cayo 2",""],
 ["Dealer","Sandy","312","lakókocsi"],["Dealer","Sandy","274","L alakú ház"],["Dealer","Sandy","403","68-as út ruhabolt"],["Dealer","Sandy","372","Rebel (vadászat mellett)"],
@@ -69,8 +69,8 @@ function toast(s){$("toast").textContent=s;$("toast").classList.add("show");setT
 function setStatus(s){$("connectionStatus").textContent=s}
 function updateAdminUI(){ $("addBtn").hidden=!admin;$("logoutBtn").hidden=!admin;$("loginBtn").hidden=admin;$("adminBar").hidden=!admin; }
 async function loadPlaces(){
- if(!supabase){places=[...seed];setStatus("Beállítás szükséges · helyi előnézet");render();return}
- try{const {data,error}=await supabase.from("places").select("*").order("category").order("region").order("code");if(error)throw error;places=data||[];setStatus("Online adatbázis csatlakoztatva");render()}
+ if(!supabaseClient){places=[...seed];setStatus("Beállítás szükséges · helyi előnézet");render();return}
+ try{const {data,error}=await supabaseClient.from("places").select("*").order("category").order("region").order("code");if(error)throw error;places=data||[];setStatus("Online adatbázis csatlakoztatva");render()}
  catch(e){setStatus("Adatbázis hiba — ellenőrizd az SQL beállítást");toast("Nem sikerült betölteni az adatokat: "+e.message)}
 }
 function render(){
@@ -86,23 +86,23 @@ function render(){
 function openPlace(p){if(!admin)return; $("placeForm").reset();$("editId").value=p?.id||"";$("formTitle").textContent=p?"Hely szerkesztése":"Új hely";$("categoryInput").value=p?.category||"Dealer";$("regionInput").value=p?.region||"";$("codeInput").value=p?.code||"";$("descInput").value=p?.description||"";currentImage=p?.image_url||null;pendingFile=null;$("imagePreview").hidden=!currentImage;$("imagePreview").src=currentImage||"";$("removeImage").checked=false;$("placeOverlay").classList.add("open")}
 document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>$(b.dataset.close).classList.remove("open"));
 ["loginOverlay","placeOverlay"].forEach(id=>$(id).addEventListener("click",e=>{if(e.target.id===id)$(id).classList.remove("open")}));
-$("loginBtn").onclick=()=>{if(!supabase){toast("Előbb állítsd be a Supabase URL-t és a publikus kulcsot.");return}$("loginOverlay").classList.add("open")};
-$("loginForm").onsubmit=async e=>{e.preventDefault();const {data,error}=await supabase.auth.signInWithPassword({email:$("email").value,password:$("password").value});if(error){toast("Sikertelen belépés: ellenőrizd az adatokat.");return}const {data:allowed,error:checkError}=await supabase.rpc("is_admin");if(checkError||!allowed){await supabase.auth.signOut();toast("Ehhez a fiókhoz nincs adminjogosultság.");return}admin=true;updateAdminUI();$("loginOverlay").classList.remove("open");toast("Sikeres adminbelépés.");render()};
-$("logoutBtn").onclick=async()=>{if(supabase)await supabase.auth.signOut();admin=false;updateAdminUI();render();toast("Kijelentkeztél.")};
+$("loginBtn").onclick=()=>{if(!supabaseClient){toast("Előbb állítsd be a Supabase URL-t és a publikus kulcsot.");return}$("loginOverlay").classList.add("open")};
+$("loginForm").onsubmit=async e=>{e.preventDefault();const {data,error}=await supabaseClient.auth.signInWithPassword({email:$("email").value,password:$("password").value});if(error){toast("Sikertelen belépés: ellenőrizd az adatokat.");return}const {data:allowed,error:checkError}=await supabaseClient.rpc("is_admin");if(checkError||!allowed){await supabaseClient.auth.signOut();toast("Ehhez a fiókhoz nincs adminjogosultság.");return}admin=true;updateAdminUI();$("loginOverlay").classList.remove("open");toast("Sikeres adminbelépés.");render()};
+$("logoutBtn").onclick=async()=>{if(supabaseClient)await supabaseClient.auth.signOut();admin=false;updateAdminUI();render();toast("Kijelentkeztél.")};
 $("addBtn").onclick=()=>openPlace();$("imageInput").onchange=e=>{const f=e.target.files[0];if(!f)return;if(f.size>5*1024*1024){toast("A kép legfeljebb 5 MB lehet.");e.target.value="";return}pendingFile=f;$("imagePreview").src=URL.createObjectURL(f);$("imagePreview").hidden=false};
-$("placeForm").onsubmit=async e=>{e.preventDefault();if(!admin||!supabase){toast("Az online admin nincs beállítva.");return}const id=$("editId").value;let image_url=currentImage;
+$("placeForm").onsubmit=async e=>{e.preventDefault();if(!admin||!supabaseClient){toast("Az online admin nincs beállítva.");return}const id=$("editId").value;let image_url=currentImage;
  try{
-  if($("removeImage").checked&&currentImage){const path=currentImage.split("/place-images/")[1];if(path)await supabase.storage.from("place-images").remove([decodeURIComponent(path)]);image_url=null}
-  if(pendingFile){const path=crypto.randomUUID()+"-"+pendingFile.name.replace(/[^a-zA-Z0-9._-]/g,"_");const {error:upErr}=await supabase.storage.from("place-images").upload(path,pendingFile,{upsert:false,contentType:pendingFile.type});if(upErr)throw upErr;image_url=supabase.storage.from("place-images").getPublicUrl(path).data.publicUrl}
+  if($("removeImage").checked&&currentImage){const path=currentImage.split("/place-images/")[1];if(path)await supabaseClient.storage.from("place-images").remove([decodeURIComponent(path)]);image_url=null}
+  if(pendingFile){const path=crypto.randomUUID()+"-"+pendingFile.name.replace(/[^a-zA-Z0-9._-]/g,"_");const {error:upErr}=await supabaseClient.storage.from("place-images").upload(path,pendingFile,{upsert:false,contentType:pendingFile.type});if(upErr)throw upErr;image_url=supabaseClient.storage.from("place-images").getPublicUrl(path).data.publicUrl}
   const row={category:$("categoryInput").value,region:$("regionInput").value.trim(),code:$("codeInput").value.trim(),description:$("descInput").value.trim(),image_url};
-  const result=id?await supabase.from("places").update(row).eq("id",id):await supabase.from("places").insert(row);
+  const result=id?await supabaseClient.from("places").update(row).eq("id",id):await supabaseClient.from("places").insert(row);
   if(result.error)throw result.error;$("placeOverlay").classList.remove("open");toast("Hely mentve az online adatbázisba.");await loadPlaces();
  }catch(err){toast("Mentési hiba: "+err.message)}
 };
-$("results").addEventListener("click",async e=>{const ed=e.target.closest("[data-edit]"),del=e.target.closest("[data-delete]");if(ed){openPlace(places.find(p=>String(p.id)===ed.dataset.edit))}if(del){const p=places.find(x=>String(x.id)===del.dataset.delete);if(p&&confirm("Biztosan törlöd ezt a helyet?")){const {error}=await supabase.from("places").delete().eq("id",p.id);if(error)toast("Törlési hiba: "+error.message);else{toast("Hely törölve.");await loadPlaces()}}}});
+$("results").addEventListener("click",async e=>{const ed=e.target.closest("[data-edit]"),del=e.target.closest("[data-delete]");if(ed){openPlace(places.find(p=>String(p.id)===ed.dataset.edit))}if(del){const p=places.find(x=>String(x.id)===del.dataset.delete);if(p&&confirm("Biztosan törlöd ezt a helyet?")){const {error}=await supabaseClient.from("places").delete().eq("id",p.id);if(error)toast("Törlési hiba: "+error.message);else{toast("Hely törölve.");await loadPlaces()}}}});
 $("search").addEventListener("input",render);$("regionFilter").addEventListener("change",render);document.querySelectorAll("[data-category]").forEach(b=>b.onclick=()=>{activeCategory=b.dataset.category;document.querySelectorAll("[data-category]").forEach(x=>x.classList.toggle("active",x===b));render()});
 $("clearBtn").onclick=()=>{$("search").value="";$("regionFilter").value="";activeCategory="all";document.querySelectorAll("[data-category]").forEach(x=>x.classList.toggle("active",x.dataset.category==="all"));render()};
 $("exportBtn").onclick=()=>{const blob=new Blob([JSON.stringify(places,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="fivem-helyek.json";a.click();URL.revokeObjectURL(url)};
-if(supabase){supabase.auth.getSession().then(async({data})=>{if(data.session){const {data:ok}=await supabase.rpc("is_admin");if(ok){admin=true;updateAdminUI()}}loadPlaces()})}else loadPlaces();
+if(supabaseClient){supabaseClient.auth.getSession().then(async({data})=>{if(data.session){const {data:ok}=await supabaseClient.rpc("is_admin");if(ok){admin=true;updateAdminUI()}}loadPlaces()})}else loadPlaces();
 </script>
 </body></html>

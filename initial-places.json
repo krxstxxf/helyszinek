@@ -1,0 +1,163 @@
+[
+  {
+    "category": "Dealer",
+    "region": "Cayo Perico Sziget",
+    "code": "Cayo 1",
+    "description": "",
+    "image_url": null
+  },
+  {
+    "category": "Dealer",
+    "region": "Cayo Perico Sziget",
+    "code": "Cayo 2",
+    "description": "",
+    "image_url": null
+  },
+  {
+    "category": "Dealer",
+    "region": "Sandy",
+    "code": "312",
+    "description": "lakókocsi",
+    "image_url": null
+  },
+  {
+    "category": "Dealer",
+    "region": "Sandy",
+    "code": "274",
+    "description": "L alakú ház",
+    "image_url": null
+  },
+  {
+    "category": "Dealer",
+    "region": "Sandy",
+    "code": "403",
+    "description": "68-as út ruhabolt",
+    "image_url": null
+  },
+  {
+    "category": "Dealer",
+    "region": "Sandy",
+    "code": "372",
+    "description": "Rebel (vadászat mellett)",
+    "image_url": null
+  },
+  {
+    "category": "Dealer",
+    "region": "Város",
+    "code": "700",
+    "description": "hátsó ajtó háznál",
+    "image_url": null
+  },
+  {
+    "category": "Dealer",
+    "region": "Város",
+    "code": "592",
+    "description": "sikátor",
+    "image_url": null
+  },
+  {
+    "category": "Dealer",
+    "region": "Város",
+    "code": "526",
+    "description": "ajtónál",
+    "image_url": null
+  },
+  {
+    "category": "Dealer",
+    "region": "Város",
+    "code": "671",
+    "description": "bolt mögött",
+    "image_url": null
+  },
+  {
+    "category": "Dealer",
+    "region": "Város",
+    "code": "867",
+    "description": "városi roncstelep",
+    "image_url": null
+  },
+  {
+    "category": "Dealer",
+    "region": "Nyugati",
+    "code": "433",
+    "description": "",
+    "image_url": null
+  },
+  {
+    "category": "Dealer",
+    "region": "Nyugati",
+    "code": "",
+    "description": "Katonaság mellett nyugati felől",
+    "image_url": null
+  },
+  {
+    "category": "Dealer",
+    "region": "Nyugati",
+    "code": "194",
+    "description": "Hookies",
+    "image_url": null
+  },
+  {
+    "category": "Dealer",
+    "region": "Nyugati",
+    "code": "154",
+    "description": "hajóbérlő",
+    "image_url": null
+  },
+  {
+    "category": "Dealer",
+    "region": "Nyugati",
+    "code": "053",
+    "description": "favágó",
+    "image_url": null
+  },
+  {
+    "category": "Dealer",
+    "region": "Roxwood",
+    "code": "017",
+    "description": "piros bódé",
+    "image_url": null
+  },
+  {
+    "category": "Dealer",
+    "region": "Roxwood",
+    "code": "1020",
+    "description": "raktár (két fehér lakóautó)",
+    "image_url": null
+  },
+  {
+    "category": "Dealer",
+    "region": "Roxwood",
+    "code": "1014",
+    "description": "ajtó, kék ház",
+    "image_url": null
+  },
+  {
+    "category": "Ammónia",
+    "region": "Általános",
+    "code": "762-826",
+    "description": "híd alatt",
+    "image_url": null
+  },
+  {
+    "category": "Ammónia",
+    "region": "Általános",
+    "code": "209",
+    "description": "Katonaság",
+    "image_url": null
+  },
+  {
+    "category": "Ammónia",
+    "region": "Általános",
+    "code": "224",
+    "description": "földúton",
+    "image_url": null
+  },
+  {
+    "category": "Ammónia",
+    "region": "Roxwood",
+    "code": "1061",
+    "description": "",
+    "image_url": null
+  }
+]
